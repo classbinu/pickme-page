@@ -73,14 +73,17 @@
 		
 		<script>
 
-            function Mobile() {
-                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            }
-            
-            // 모바일이 아니면 화면을 확대합니다.
-            if (!Mobile()){
-                document.body.style.zoom = '250%';
-            } 
+            // function Mobile() {
+            //     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            // }
+
+            // // 모바일이 아니면 화면을 확대합니다.
+            // if (!Mobile()){
+            //     document.body.style.zoom = '250%';
+            // }
+
+            // 화면을 확대합니다.
+            document.body.style.zoom = '250%';
 
             // 초기 변수를 할당합니다.
             let allList = [];
@@ -148,8 +151,6 @@
                         let color = sortColors[0];
                         let numberButton = document.createElement('button');
                         numberButton.classList.add('btn', 'btn-lg', 'btn-circle', 'm-2', color, 'text-5xl');
-                        // let numberButton = document.createElement('span');
-                        // numberButton.classList.add('w-40', 'h-40', 'rounded-full', 'text-9xl', 'bg-rose-400', 'm-5');
                         numberButton.innerHTML = element;
                         pickedNumberList.appendChild(numberButton);
                         audio.play();
