@@ -117,12 +117,13 @@
 				}
 				finalList = allList.sort(() => Math.random() - 0.5);
                 document.getElementById('maxNumber').setAttribute('readonly', true);
-                document.getElementById('saveMaxNumber').className += ' btn-disabled';
+                document.getElementById('saveMaxNumber').classList.add('btn-disabled');
                 alert('전체 인원이 저장되었습니다.');
 			}
 
             // 지정된 갯수만큼 랜덤으로 숫자를 추출합니다.
             function pickRandomNumber() {
+                // document.getElementById('pickRandomNumber').classList.add('btn-disabled');
                 randomNumber = parseInt(document.getElementById('randomNumber').value);
                 finalListLength = finalList.length;
                 if (finalList.length >= randomNumber) {
