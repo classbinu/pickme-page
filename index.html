@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="cupcake">
+	<head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pick Randon Number</title>
+		<link href="https://cdn.jsdelivr.net/npm/daisyui@2.19.0/dist/full.css" rel="stylesheet" type="text/css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @font-face {
+                font-family: 'SDSamliphopangche_Outline';
+                src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/SDSamliphopangche_Outline.woff') format('woff');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'KOTRAHOPE';
+                src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/KOTRAHOPE.woff2') format('woff2');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            body {
+                font-family: KOTRAHOPE;
+            }
+            
+            h1 {
+                font-family: SDSamliphopangche_Outline;
+            }
+        </style>
+	</head>
+	<body class="container mx-auto">
+		<div class="title flex justify-center text-6xl my-2">
+            <h1>Pick Random Number</h1>
+        </div>
+		<div class="flex justify-center">
+			<input type=number id="maxNumber" placeholder="전체 인원을 숫자로 입력해주세요." class="input input-bordered w-full max-w-xs read-only:bg-gray-200">
+			<button id="saveMaxNumber" class="btn btn-primary">저장</button>
+		</div>
+        <div class="h-2"></div>
+		<div class="flex justify-center">
+			<input type=number id="randomNumber" placeholder="뽑을 인원을 숫자로 입력해주세요." class="input input-bordered w-full max-w-xs">
+			<button id="pickRandomNumber" class="btn btn-primary">뽑기</button>
+		</div>
+
+        <div id="pickedNumberList" class="flex justify-center flex-wrap">
+        <!-- 이곳에 결과가 들어갑니다. -->
+        </div>
+
+        <div class="h-20"></div>
+		<div class="overflow-x-auto mt-36">
+			<table class="table w-full text-center text-3xl">
+				<thead>
+					<tr>
+						<th class="w-2/12"></th>
+						<th class="w-10/12">추첨 결과</th>
+					</tr>
+				</thead>
+				<tbody id="tableTbody">
+				</tbody>
+			</table>
+		</div>
+
+        <div class="flex justify-center my-28">
+            <button onclick="location.reload()" class="btn btn-error">초기화</button>
+        </div>
+
+        <!-- <div class="flex justify-center mb-20">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/emoadwiK4TM?autoplay=1&t=" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div> -->
+		
+		<script>
+            // 화면을 확대합니다.
+            document.body.style.zoom = '250%';
+
+            // 초기 변수를 할당합니다.
+            let allList = [];
+            let finalList = [];
+            let maxNumber = 0;
+            let audio = new Audio('./MP_Pling.mp3');
+
+            // DOM요소를 변수에 할당합니다.
+            const btnSaveMaxNumber = document.getElementById('saveMaxNumber');
+            const btnPickRandomNumber = document.getElementById('pickRandomNumber');
+
+            // input value 유효성 검증
+            function checkInpuBox(elementId) {
+                const value = parseInt(document.getElementById(elementId).value);
+                if (value <= 0) {
+                    alert('음수와 0은 입력할 수 없습니다.');
+                    document.getElementById(elementId).value = '';
+                } else if (!value) {
+                    alert('숫자를 입력해주세요!');
+                }
+                return;
+            }
+
+            // 최대값을 받아서 셔플합니다.
+			function saveMaxNumber() {
+                allList = [];
+                finalList = [];
+				maxNumber = parseInt(document.getElementById('maxNumber').value);
+				for (let i = 1; i <= maxNumber; i++) {
+					allList.push(i);
+				}
+				finalList = allList.sort(() => Math.random() - 0.5);
+                document.getElementById('maxNumber').setAttribute('readonly', true);
+                document.getElementById('saveMaxNumber').className += ' btn-disabled';
+                alert('전체 인원이 저장되었습니다.');
+			}
+
+            // 지정된 갯수만큼 랜덤으로 숫자를 추출합니다.
+            function pickRandomNumber() {
+                randomNumber = parseInt(document.getElementById('randomNumber').value);
+                finalListLength = finalList.length;
+                if (finalList.length >= randomNumber) {
+                    result = finalList.slice(0, randomNumber);
+                    finalList = finalList.slice(randomNumber)
+                    console.log(result);
+                    console.log(finalList);
+                    createPickedNumberList(result);
+                } else {
+                    alert(`뽑을 수 있는 인원은 ${finalListLength}명 입니다.`);
+                }
+            }
+
+            // 현재 추출된 숫자를 HTML에 그립니다.
+            function createPickedNumberList(result) {
+                let colors = ['btn-info', 'btn-success', 'btn-warning', 'btn-error', 'btn-primary', 'btn-secondary', 'btn-accent', 'btn'];
+
+                let pickedNumberList = document.getElementById('pickedNumberList');
+                while(pickedNumberList.hasChildNodes()) {
+                    pickedNumberList.removeChild(pickedNumberList.firstChild);
+                }
+
+                result.forEach((element, i) => {
+                    setTimeout(() => {
+                        let sortColors = colors.sort(() => Math.random() - 0.5);
+                        let color = sortColors[0];
+                        let numberButton = document.createElement('button');
+                        numberButton.classList.add('btn', 'btn-lg', 'btn-circle', 'm-2', color);
+                        // let numberButton = document.createElement('span');
+                        // numberButton.classList.add('w-40', 'h-40', 'rounded-full', 'text-9xl', 'bg-rose-400', 'm-5');
+                        numberButton.innerHTML = element;
+                        pickedNumberList.appendChild(numberButton);
+                        audio.play();
+                    }, i * 2000);
+                });
+
+                createLogNumberList(result);
+            }
+
+            // 추출된 숫자의 누적 결과를 HTML에 그립니다.
+            function createLogNumberList(result) {
+                setTimeout(() => {
+                    const table = document.getElementById('tableTbody');
+                    const index = table.rows.length;
+                    const newRow = table.insertRow();
+                    const newCell0 = newRow.insertCell(0);
+                    const newCell1 = newRow.insertCell(1);
+                    newCell0.innerText = index + 1;
+                    newCell1.innerText = result;
+                }, result.length * 2000);
+            }
+
+			// 이벤트를 추가합니다.
+            btnSaveMaxNumber.addEventListener('click', () => checkInpuBox('maxNumber'));
+			btnPickRandomNumber.addEventListener('click', () => checkInpuBox('randomNumber'));
+
+			btnSaveMaxNumber.addEventListener('click', saveMaxNumber);
+			btnPickRandomNumber.addEventListener('click', pickRandomNumber);
+		</script>
+	</body>
+</html>
